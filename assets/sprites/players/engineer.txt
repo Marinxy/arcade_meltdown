@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/players/engineer.png
+# Dimensions: 35x35
+# Color: #FFA500
+# This is a placeholder file - replace with actual sprite image

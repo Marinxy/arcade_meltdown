@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/spit.png
+# Dimensions: 5x5
+# Color: #8B4513
+# This is a placeholder file - replace with actual sprite image

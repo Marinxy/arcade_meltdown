@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/weapons/shotgun.png
+# Dimensions: 50x15
+# Color: #696969
+# This is a placeholder file - replace with actual sprite image

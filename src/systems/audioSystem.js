@@ -3,6 +3,8 @@
  * Manages all audio playback in the game
  */
 
+import AudioManager from '../audio/audioManager.js';
+
 class AudioSystem {
     /**
      * Create a new audio system

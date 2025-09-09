@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/weapons/assaultRifle.png
+# Dimensions: 60x20
+# Color: #696969
+# This is a placeholder file - replace with actual sprite image

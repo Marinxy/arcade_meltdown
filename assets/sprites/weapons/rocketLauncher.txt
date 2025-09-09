@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/weapons/rocketLauncher.png
+# Dimensions: 80x30
+# Color: #FF4500
+# This is a placeholder file - replace with actual sprite image

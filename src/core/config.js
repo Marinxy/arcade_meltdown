@@ -17,7 +17,10 @@ class Config {
                 vsync: true,
                 quality: 'high',
                 particles: true,
-                shadows: true
+                shadows: true,
+                enableBloom: false,
+                enableScanlines: false,
+                effectQuality: 'high'
             },
             
             // Audio settings
@@ -41,6 +44,18 @@ class Config {
                 chaosDecayRate: 0.1 // Chaos decay per second
             },
             
+            // Chaos system settings
+            chaos: {
+                thresholds: {
+                    low: 0.2,
+                    medium: 0.4,
+                    high: 0.6,
+                    extreme: 0.8
+                },
+                maxLevel: 1.0,
+                decayRate: 0.1
+            },
+            
             // Control settings
             controls: {
                 // Default control bindings
@@ -59,6 +74,81 @@ class Config {
                 powerup1: 'KeyQ',
                 powerup2: 'KeyE',
                 pause: 'Escape'
+            },
+            
+            // Player classes
+            player: {
+                classes: {
+                    heavy: {
+                        health: 200,
+                        speed: 3,
+                        weapon: 'assault_rifle',
+                        specialCooldown: 10,
+                        description: 'High health, slow movement'
+                    },
+                    scout: {
+                        health: 70,
+                        speed: 8,
+                        weapon: 'smg',
+                        specialCooldown: 5,
+                        description: 'Low health, fast movement'
+                    },
+                    engineer: {
+                        health: 90,
+                        speed: 4,
+                        weapon: 'shotgun',
+                        specialCooldown: 8,
+                        description: 'Can build turrets and barriers'
+                    },
+                    medic: {
+                        health: 80,
+                        speed: 6,
+                        weapon: 'pistol',
+                        specialCooldown: 6,
+                        description: 'Can heal other players'
+                    }
+                }
+            },
+            
+            // Enemy types
+            enemy: {
+                types: {
+                    grunt: {
+                        health: 50,
+                        speed: 2,
+                        damage: 10,
+                        points: 10,
+                        description: 'Basic enemy'
+                    },
+                    spitter: {
+                        health: 30,
+                        speed: 3,
+                        damage: 15,
+                        points: 15,
+                        description: 'Ranged enemy'
+                    },
+                    bruiser: {
+                        health: 100,
+                        speed: 1,
+                        damage: 25,
+                        points: 25,
+                        description: 'Heavy enemy'
+                    },
+                    miniBoss: {
+                        health: 200,
+                        speed: 2,
+                        damage: 30,
+                        points: 50,
+                        description: 'Mini-boss enemy'
+                    },
+                    boss: {
+                        health: 500,
+                        speed: 1,
+                        damage: 40,
+                        points: 100,
+                        description: 'Boss enemy'
+                    }
+                }
             }
         };
         

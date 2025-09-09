@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/enemies/miniBoss.png
+# Dimensions: 50x50
+# Color: #FFD700
+# This is a placeholder file - replace with actual sprite image

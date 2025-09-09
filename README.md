@@ -4,19 +4,22 @@ A local multiplayer arcade game with wave-based combat and chaos mechanics.
 
 ## Description
 
-Arcade Meltdown is a fast-paced, local multiplayer arcade game where players team up to survive waves of increasingly difficult enemies. Choose from 5 unique player classes, each with their own strengths and abilities, and work together to defeat hordes of enemies, mini-bosses, and epic boss battles.
+Arcade Meltdown is a fast-paced, local multiplayer arcade game where players team up to survive waves of increasingly difficult enemies. Choose from 4 unique player classes, each with their own strengths and abilities, and work together to defeat hordes of enemies, mini-bosses, and epic boss battles.
+
+**Current Status**: ✅ **Fully Playable** - Core gameplay is working with placeholder assets and responsive design.
 
 ## Features
 
-- **5 Unique Player Classes**: Grunt, Heavy, Scout, Engineer, and Medic, each with unique abilities
-- **Multiple Weapon Types**: Assault Rifle, Plasma Rifle, Flamethrower, Rocket Launcher, and more
-- **Power-up Systems**: Orbital Strike and Time-Slow Bubble for strategic advantages
+- **4 Unique Player Classes**: Heavy, Scout, Engineer, and Medic, each with unique abilities
+- **Multiple Weapon Types**: Assault Rifle, SMG, Shotgun, Pistol, and more
+- **Power-up Systems**: Health packs, ammo packs, shields, and speed boosts
 - **Varied Enemy Types**: Grunt, Spitter, Bruiser, Mini-boss, and Boss enemies with unique AI
 - **Wave-based Gameplay**: Increasingly difficult waves with chaos mechanics
-- **Local Multiplayer**: Support for 2-8 players on the same device
-- **Cosmetic System**: Unlock and customize player appearances
-- **Community Map Support**: Create, share, and play custom maps
-- **Expansion Soundtrack Pack**: Multiple music genres and sound effects
+- **Responsive Design**: Full-screen gameplay that adapts to any screen size
+- **Placeholder Assets**: Complete placeholder system for easy asset replacement
+- **Modern Architecture**: Entity-Component-System (ECS) with modular design
+- **Real-time HUD**: Live health, ammo, score, and enemy tracking
+- **Smooth Controls**: WASD movement with mouse aiming and shooting
 
 ## Screenshots
 
@@ -33,7 +36,7 @@ Arcade Meltdown is a fast-paced, local multiplayer arcade game where players tea
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/example/arcade-meltdown.git
+   git clone https://github.com/yourusername/arcade-meltdown.git
    cd arcade-meltdown
    ```
 
@@ -49,7 +52,7 @@ Arcade Meltdown is a fast-paced, local multiplayer arcade game where players tea
 
 4. Open your browser to `http://localhost:8080`
 
-Alternatively, you can simply open `index.html` in your browser without running a server, but some features may not work properly due to browser security restrictions.
+**Note**: The game requires a local server due to ES6 module imports and asset loading. Simply opening `index.html` in a browser will not work properly.
 
 ## How to Play
 
@@ -65,12 +68,11 @@ Alternatively, you can simply open `index.html` in your browser without running 
 
 ### Gameplay
 
-1. **Select a Class**: Choose from 5 unique classes, each with different stats and abilities
-   - **Grunt**: Balanced class with average stats
-   - **Heavy**: High health, slow movement, high damage
-   - **Scout**: Low health, fast movement, low damage
-   - **Engineer**: Can build turrets and barriers
-   - **Medic**: Can heal other players
+1. **Select a Class**: Choose from 4 unique classes, each with different stats and abilities
+   - **Heavy**: High health (200), slow movement (3), high damage (15)
+   - **Scout**: Low health (70), fast movement (8), low damage (8)
+   - **Engineer**: Medium health (90), medium movement (4), medium damage (12)
+   - **Medic**: Medium health (80), good movement (6), low damage (7)
 
 2. **Survive Waves**: Fight through waves of enemies that increase in difficulty
    - Each wave has more enemies and stronger types
@@ -82,36 +84,31 @@ Alternatively, you can simply open `index.html` in your browser without running 
    - Chaos decreases over time when not fighting
 
 4. **Use Power-ups**: Collect and use power-ups strategically
-   - **Orbital Strike**: Call down a devastating orbital strike
-   - **Time-Slow Bubble**: Slow down time in a localized area
+   - **Health Pack**: Restore health
+   - **Ammo Pack**: Restore ammunition
+   - **Shield**: Temporary damage protection
+   - **Speed Boost**: Temporary movement speed increase
 
-5. **Customize Your Experience**: Unlock cosmetics, create custom maps, and enjoy different soundtrack packs
+5. **Track Your Progress**: Monitor your health, ammo, score, and enemy count in real-time
 
 ## Multiplayer
 
-Arcade Meltdown supports local multiplayer for 2-8 players on the same device. Each player uses their own set of controls:
+Arcade Meltdown is designed for local multiplayer (currently single-player mode implemented). Future updates will include:
 
 - **Player 1**: WASD to move, Mouse to aim/shoot
 - **Player 2**: Arrow keys to move, Numpad 0 to shoot
-- *(Add more control schemes for additional players)*
+- **Additional Players**: Customizable control schemes
 
-## Map Editor
+## Asset System
 
-Create your own custom maps with the built-in map editor:
+The game includes a comprehensive placeholder asset system:
 
-1. From the main menu, select "Map Editor"
-2. Use the tools to paint tiles, place spawn points, and set objectives
-3. Save your map and share it with the community
-4. Play custom maps created by other players
+- **Placeholder Images**: Colored rectangles for all sprites (players, enemies, bullets, UI)
+- **Placeholder Audio**: Silent MP3 files for all sound effects and music
+- **Easy Replacement**: Simply replace placeholder files with your own assets
+- **Asset Manager**: Automatic loading and caching of all game assets
 
-## Soundtrack Packs
-
-Enhance your audio experience with expansion soundtrack packs:
-
-1. From the main menu, select "Soundtrack"
-2. Browse available soundtrack packs
-3. Purchase and enable your preferred pack
-4. Enjoy different music genres and sound effects
+See `PLACEHOLDER_ASSETS.md` for a complete list of placeholder assets and their specifications.
 
 ## Development
 
@@ -121,23 +118,48 @@ Enhance your audio experience with expansion soundtrack packs:
 arcade-meltdown/
 ├── assets/
 │   ├── css/          # Stylesheets
-│   ├── audio/        # Audio files
-│   ├── images/       # Image assets
-│   └── ui/           # UI assets
+│   ├── audio/        # Audio files (music, sfx, ui)
+│   ├── sprites/      # Game sprites (players, enemies, bullets, particles, ui)
+│   └── icons/        # UI icons (weapons, powerups, ui)
 ├── src/
-│   ├── core/         # Core game engine
-│   ├── entities/     # Game entities
-│   ├── systems/      # Game systems
+│   ├── core/         # Core game engine (GameEngine, Config, EventSystem)
+│   ├── entities/     # Game entities (Player, Enemy, Bullet, Particle)
+│   ├── systems/      # Game systems (Input, Render, Physics, Audio)
+│   ├── assets/       # Asset management (AssetManager)
+│   ├── audio/        # Audio management (AudioManager)
 │   ├── ui/           # UI components
 │   └── main.js       # Main entry point
 ├── index.html        # Main HTML file
 ├── package.json      # Project metadata
+├── PLACEHOLDER_ASSETS.md  # Asset documentation
 └── README.md         # This file
 ```
 
 ### Building
 
 The game is built using vanilla HTML5, CSS3, and JavaScript (ES6+). No build step is required for development.
+
+### Recent Fixes & Improvements
+
+- ✅ **Fixed Asset Loading**: Resolved 404 errors for sprite files with placeholder system
+- ✅ **Fixed Player/Enemy Validation**: Added proper class and type definitions to config
+- ✅ **Fixed Game Layout**: Implemented responsive full-screen design
+- ✅ **Fixed UI Scattering**: Reorganized HUD elements for better layout
+- ✅ **Added Placeholder Assets**: Complete placeholder system for easy asset replacement
+- ✅ **Improved Responsive Design**: Game now works on all screen sizes
+- ✅ **Fixed Module System**: Resolved CommonJS/ES6 import conflicts
+- ✅ **Added Asset Manager**: Centralized asset loading and caching system
+
+### Current Status
+
+- **Core Gameplay**: ✅ Working (player movement, enemy spawning, basic combat)
+- **UI System**: ✅ Working (responsive design, class selection, HUD)
+- **Asset System**: ✅ Working (placeholder assets with fallbacks)
+- **Audio System**: ✅ Working (silent placeholders, no crashes)
+- **Configuration**: ✅ Working (player classes, enemy types, settings)
+- **Multiplayer**: 🚧 Planned (currently single-player only)
+- **Map Editor**: 🚧 Planned (UI exists, functionality pending)
+- **Soundtrack Packs**: 🚧 Planned (UI exists, functionality pending)
 
 ### Contributing
 

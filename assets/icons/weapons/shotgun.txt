@@ -1,0 +1,5 @@
+# Placeholder icon for assets/icons/weapons/shotgun.png
+# Icon name: shotgun
+# Dimensions: 32x32 pixels (standard icon size)
+# This is a placeholder file - replace with actual icon image
+# Suggested color scheme: Match the game's UI theme

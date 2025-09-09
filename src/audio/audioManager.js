@@ -3,6 +3,8 @@
  * Handles all music and sound effects for the game
  */
 
+import AssetManager from '../assets/assetManager.js';
+
 class AudioManager {
     /**
      * Create a new audio manager
@@ -411,6 +413,9 @@ class AudioManager {
         // Current ambient sounds
         this.currentAmbientSounds = {};
         
+        // Asset manager
+        this.assetManager = new AssetManager();
+        
         // Initialize audio manager
         this.init();
     }
@@ -440,8 +445,11 @@ class AudioManager {
             // Set up event listeners
             this.setupEventListeners();
             
-            // Load all sounds
-            this.loadAllSounds();
+            // Initialize asset manager
+            this.assetManager.init();
+            
+            // Load all sounds (disabled for now due to missing audio files)
+            // this.loadAllSounds();
         } catch (error) {
             console.error("Failed to initialize audio context:", error);
             this.enabled = false;
@@ -1488,6 +1496,4 @@ class AudioManager {
 }
 
 // Export for use in modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = AudioManager;
-}
+export default AudioManager;

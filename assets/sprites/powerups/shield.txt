@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/powerups/shield.png
+# Dimensions: 25x25
+# Color: #00FFFF
+# This is a placeholder file - replace with actual sprite image

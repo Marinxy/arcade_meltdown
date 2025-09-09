@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/ui/ammoCounter.png
+# Dimensions: 100x30
+# Color: #FFFF00
+# This is a placeholder file - replace with actual sprite image

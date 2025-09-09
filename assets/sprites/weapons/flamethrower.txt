@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/weapons/flamethrower.png
+# Dimensions: 60x20
+# Color: #FF0000
+# This is a placeholder file - replace with actual sprite image

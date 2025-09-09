@@ -3,6 +3,8 @@
  * Handles rendering of entities and visual effects
  */
 
+import AssetManager from '../assets/assetManager.js';
+
 class RenderSystem {
     /**
      * Create a new Render System
@@ -71,6 +73,9 @@ class RenderSystem {
             renderTime: 0
         };
         
+        // Asset manager
+        this.assetManager = new AssetManager();
+        
         // Initialize the system
         this.init();
     }
@@ -87,6 +92,9 @@ class RenderSystem {
         
         // Load visual settings from config
         this.loadVisualSettings();
+        
+        // Initialize asset manager
+        this.assetManager.init();
         
         // Listen for config changes
         window.eventSystem.on('config:change', (event) => {
@@ -303,6 +311,10 @@ class RenderSystem {
      */
     renderArena() {
         const tileSize = this.gameEngine.arena.tileSize;
+        
+        // Fill arena background
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
         // Render tiles
         for (let y = 0; y < this.gameEngine.arena.tiles.length; y++) {
@@ -1360,15 +1372,17 @@ class RenderSystem {
      * @param {object} options - Particle options
      */
     createParticle(x, y, type, options = {}) {
-        // Import Particle class (circular dependency workaround)
-        const Particle = require('../entities/particle.js').default || window.Particle;
-        
-        // Create particle entity
-        const particle = new Particle(x, y, type, options);
-        particle.gameEngine = this.gameEngine;
-        
-        // Add particle to entities
-        this.gameEngine.addEntity(particle);
+        // Import Particle class dynamically to avoid circular dependency
+        import('../entities/particle.js').then(({ default: Particle }) => {
+            // Create particle entity
+            const particle = new Particle(x, y, type, options);
+            particle.gameEngine = this.gameEngine;
+            
+            // Add particle to entities
+            this.gameEngine.addEntity(particle);
+        }).catch(error => {
+            console.error('Failed to create particle:', error);
+        });
     }
     
     /**
@@ -1453,6 +1467,4 @@ class RenderSystem {
 }
 
 // Export for use in modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = RenderSystem;
-}
+export default RenderSystem;

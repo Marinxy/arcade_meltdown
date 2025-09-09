@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/enemies/grunt.png
+# Dimensions: 20x20
+# Color: #800080
+# This is a placeholder file - replace with actual sprite image

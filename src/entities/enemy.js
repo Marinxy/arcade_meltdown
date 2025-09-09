@@ -62,7 +62,7 @@ class Enemy extends Entity {
      * @param {number} wave - Wave number
      */
     initEnemyType(enemyType, wave) {
-        const enemyConfig = window.config.get(`enemies.${enemyType}`);
+        const enemyConfig = window.config.get(`enemy.types.${enemyType}`);
         
         if (!enemyConfig) {
             console.error(`Invalid enemy type: ${enemyType}`);

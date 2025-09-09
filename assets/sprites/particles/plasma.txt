@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/particles/plasma.png
+# Dimensions: 12x12
+# Color: #00FFFF
+# This is a placeholder file - replace with actual sprite image

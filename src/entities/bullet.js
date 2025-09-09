@@ -352,6 +352,4 @@ class Bullet extends Entity {
 }
 
 // Export for use in modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = Bullet;
-}
+export default Bullet;

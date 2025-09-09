@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/flame.png
+# Dimensions: 6x10
+# Color: #FF0000
+# This is a placeholder file - replace with actual sprite image

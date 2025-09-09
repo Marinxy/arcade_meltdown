@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/powerups/healthPack.png
+# Dimensions: 20x20
+# Color: #00FF00
+# This is a placeholder file - replace with actual sprite image

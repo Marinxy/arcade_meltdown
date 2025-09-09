@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/particles/blood.png
+# Dimensions: 8x8
+# Color: #8B0000
+# This is a placeholder file - replace with actual sprite image

@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/enemies/bruiser.png
+# Dimensions: 35x35
+# Color: #FF4500
+# This is a placeholder file - replace with actual sprite image

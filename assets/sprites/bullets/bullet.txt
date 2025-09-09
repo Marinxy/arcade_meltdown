@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/bullet.png
+# Dimensions: 4x2
+# Color: #FFFF00
+# This is a placeholder file - replace with actual sprite image

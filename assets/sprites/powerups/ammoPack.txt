@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/powerups/ammoPack.png
+# Dimensions: 20x20
+# Color: #FFFF00
+# This is a placeholder file - replace with actual sprite image

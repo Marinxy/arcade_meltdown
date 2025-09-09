@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/rocket.png
+# Dimensions: 8x4
+# Color: #FF4500
+# This is a placeholder file - replace with actual sprite image

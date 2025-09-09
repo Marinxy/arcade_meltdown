@@ -44,9 +44,31 @@ function init() {
         return;
     }
     
-    // Set canvas size
-    canvas.width = window.config.get('graphics.canvasWidth');
-    canvas.height = window.config.get('graphics.canvasHeight');
+    // Set canvas size to viewport
+    function resizeCanvas() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Update config
+        window.config.set('graphics.canvasWidth', width);
+        window.config.set('graphics.canvasHeight', height);
+        
+        // Update game engine if it exists
+        if (gameEngine) {
+            gameEngine.canvas.width = width;
+            gameEngine.canvas.height = height;
+            gameEngine.arena.width = width;
+            gameEngine.arena.height = height;
+        }
+    }
+    
+    // Set initial size
+    resizeCanvas();
+    
+    // Handle window resize
+    window.addEventListener('resize', resizeCanvas);
     
     const ctx = canvas.getContext('2d');
     if (!ctx) {
@@ -257,20 +279,7 @@ function setupUIEventListeners() {
  * Apply options
  */
 function applyOptions() {
-    // Graphics options
-    const resolution = document.getElementById('resolution')?.value;
-    if (resolution) {
-        const [width, height] = resolution.split('x').map(Number);
-        window.config.set('graphics.canvasWidth', width);
-        window.config.set('graphics.canvasHeight', height);
-        
-        // Update canvas size
-        const canvas = document.getElementById('game-canvas');
-        if (canvas) {
-            canvas.width = width;
-            canvas.height = height;
-        }
-    }
+    // Graphics options (resolution is now handled by responsive sizing)
     
     const fullscreen = document.getElementById('fullscreen')?.checked;
     if (fullscreen) {

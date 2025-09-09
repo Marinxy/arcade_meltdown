@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/particles/heal.png
+# Dimensions: 10x10
+# Color: #00FF00
+# This is a placeholder file - replace with actual sprite image

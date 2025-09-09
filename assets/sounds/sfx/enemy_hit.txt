@@ -1,0 +1,4 @@
+# Placeholder for assets/sounds/sfx/enemy_hit.mp3
+# This is a placeholder MP3 file - replace with actual audio
+# Duration: 0 seconds (silent)
+# Format: MP3

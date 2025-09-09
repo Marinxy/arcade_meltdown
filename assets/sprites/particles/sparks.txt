@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/particles/sparks.png
+# Dimensions: 6x6
+# Color: #FFFF00
+# This is a placeholder file - replace with actual sprite image

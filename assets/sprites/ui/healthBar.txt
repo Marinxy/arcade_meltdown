@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/ui/healthBar.png
+# Dimensions: 200x20
+# Color: #FF0000
+# This is a placeholder file - replace with actual sprite image

@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/weapons/plasmaRifle.png
+# Dimensions: 70x25
+# Color: #00FFFF
+# This is a placeholder file - replace with actual sprite image

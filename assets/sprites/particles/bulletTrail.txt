@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/particles/bulletTrail.png
+# Dimensions: 4x4
+# Color: #FFFF00
+# This is a placeholder file - replace with actual sprite image

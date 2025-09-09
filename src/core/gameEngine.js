@@ -5,9 +5,12 @@
 
 import GameLoop from './gameLoop.js';
 import AudioSystem from '../systems/audioSystem.js';
-import CosmeticSystem from '../systems/cosmeticSystem.js';
-import CommunityMapSystem from '../systems/communityMapSystem.js';
-import ExpansionSoundtrackSystem from '../systems/expansionSoundtrackSystem.js';
+// import CosmeticSystem from '../systems/cosmeticSystem.js';
+// import CommunityMapSystem from '../systems/communityMapSystem.js';
+// import ExpansionSoundtrackSystem from '../systems/expansionSoundtrackSystem.js';
+import InputSystem from '../systems/inputSystem.js';
+import RenderSystem from '../systems/renderSystem.js';
+import PhysicsSystem from '../systems/physicsSystem.js';
 
 class GameEngine {
     /**
@@ -107,18 +110,10 @@ class GameEngine {
         // For now, we'll just create empty placeholders
         
         // Input system
-        this.inputSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            destroy: () => {}
-        };
+        this.inputSystem = new InputSystem(this);
         
         // Physics system
-        this.physicsSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            destroy: () => {}
-        };
+        this.physicsSystem = new PhysicsSystem(this);
         
         // Collision system
         this.collisionSystem = {
@@ -128,24 +123,31 @@ class GameEngine {
         };
         
         // Render system
-        this.renderSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            render: (alpha) => {},
-            destroy: () => {}
-        };
+        this.renderSystem = new RenderSystem(this);
         
         // Audio system
         this.audioSystem = new AudioSystem(this);
         
-        // Cosmetic system
-        this.cosmeticSystem = new CosmeticSystem(this);
+        // Cosmetic system (temporarily disabled)
+        this.cosmeticSystem = {
+            init: () => {},
+            update: (deltaTime) => {},
+            destroy: () => {}
+        };
         
-        // Community map system
-        this.communityMapSystem = new CommunityMapSystem(this);
+        // Community map system (temporarily disabled)
+        this.communityMapSystem = {
+            init: () => {},
+            update: (deltaTime) => {},
+            destroy: () => {}
+        };
         
-        // Expansion soundtrack system
-        this.expansionSoundtrackSystem = new ExpansionSoundtrackSystem(this);
+        // Expansion soundtrack system (temporarily disabled)
+        this.expansionSoundtrackSystem = {
+            init: () => {},
+            update: (deltaTime) => {},
+            destroy: () => {}
+        };
         
         // Add systems to the list
         this.systems.push(
@@ -259,18 +261,20 @@ class GameEngine {
         const x = this.arena.width / 2;
         const y = this.arena.height / 2;
         
-        // Import Player class (circular dependency workaround)
-        const Player = window.Player;
-        
-        // Create player entity
-        this.player = new Player(x, y, playerClass);
-        this.player.gameEngine = this;
-        
-        // Add player to entities
-        this.addEntity(this.player);
-        
-        // Emit player created event
-        window.eventSystem.emit('player:created', this.player);
+        // Import Player class dynamically
+        import('../entities/player.js').then(({ default: Player }) => {
+            // Create player entity
+            this.player = new Player(x, y, playerClass);
+            this.player.gameEngine = this;
+            
+            // Add player to entities
+            this.addEntity(this.player);
+            
+            // Emit player created event
+            window.eventSystem.emit('player:created', this.player);
+        }).catch(error => {
+            console.error('Failed to create player:', error);
+        });
     }
     
     /**
@@ -385,6 +389,9 @@ class GameEngine {
             // Show scoreboard
             window.eventSystem.emit('wave:complete', this.wave, this.score);
         }
+        
+        // Update HUD
+        this.updateHUD();
     }
     
     /**
@@ -480,23 +487,25 @@ class GameEngine {
                 break;
         }
         
-        // Import Enemy class (circular dependency workaround)
-        const Enemy = window.Enemy;
-        
-        // Create enemy entity
-        const enemy = new Enemy(x, y, enemyType, this.wave);
-        enemy.gameEngine = this;
-        
-        // Add enemy to entities
-        this.addEntity(enemy);
-        
-        // Emit enemy spawned event
-        window.eventSystem.emit('enemy:spawned', enemy);
-        
-        // Check if it's a boss and emit boss spawn event
-        if (enemyType === 'boss' || enemyType === 'miniBoss') {
-            window.eventSystem.emit('boss:spawn', enemy);
-        }
+        // Import Enemy class dynamically
+        import('../entities/enemy.js').then(({ default: Enemy }) => {
+            // Create enemy entity
+            const enemy = new Enemy(x, y, enemyType, this.wave);
+            enemy.gameEngine = this;
+            
+            // Add enemy to entities
+            this.addEntity(enemy);
+            
+            // Emit enemy spawned event
+            window.eventSystem.emit('enemy:spawned', enemy);
+            
+            // Check if it's a boss and emit boss spawn event
+            if (enemyType === 'boss' || enemyType === 'miniBoss') {
+                window.eventSystem.emit('boss:spawn', enemy);
+            }
+        }).catch(error => {
+            console.error('Failed to create enemy:', error);
+        });
     }
     
     /**
@@ -745,6 +754,70 @@ class GameEngine {
         
         // Set the target
         enemy.target = nearestPlayer;
+    }
+    
+    /**
+     * Update HUD elements
+     */
+    updateHUD() {
+        if (!this.player) return;
+        
+        // Get player components
+        const health = this.player.getComponent('Health');
+        const weapon = this.player.getComponent('Weapon');
+        
+        // Update health
+        if (health) {
+            const healthFill = document.querySelector('.health-fill');
+            const healthValue = document.querySelector('.health-value');
+            
+            if (healthFill) {
+                const healthPercent = (health.currentHealth / health.maxHealth) * 100;
+                healthFill.style.width = `${Math.max(0, Math.min(100, healthPercent))}%`;
+            }
+            
+            if (healthValue) {
+                healthValue.textContent = `${Math.max(0, health.currentHealth)}/${health.maxHealth}`;
+            }
+        }
+        
+        // Update weapon
+        if (weapon) {
+            const weaponName = document.querySelector('.hud-weapon-name');
+            const weaponAmmo = document.querySelector('.hud-weapon-ammo');
+            
+            if (weaponName) {
+                weaponName.textContent = weapon.weaponType || 'Assault Rifle';
+            }
+            
+            if (weaponAmmo) {
+                weaponAmmo.textContent = weapon.getAmmoString();
+            }
+        }
+        
+        // Update wave
+        const waveNumber = document.querySelector('#hud-wave-number');
+        if (waveNumber) {
+            waveNumber.textContent = this.wave;
+        }
+        
+        // Update chaos
+        const chaosValue = document.querySelector('#hud-chaos-value');
+        if (chaosValue) {
+            chaosValue.textContent = `${Math.round(this.chaosLevel * 100)}%`;
+        }
+        
+        // Update score
+        const scoreValue = document.querySelector('.score-value');
+        if (scoreValue) {
+            scoreValue.textContent = this.score;
+        }
+        
+        // Update enemies
+        const enemiesValue = document.querySelector('.enemies-value');
+        if (enemiesValue) {
+            enemiesValue.textContent = this.enemiesRemaining;
+        }
     }
     
     /**

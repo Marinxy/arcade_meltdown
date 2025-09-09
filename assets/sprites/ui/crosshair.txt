@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/ui/crosshair.png
+# Dimensions: 20x20
+# Color: #FFFFFF
+# This is a placeholder file - replace with actual sprite image

@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/players/heavy.png
+# Dimensions: 40x40
+# Color: #8B4513
+# This is a placeholder file - replace with actual sprite image

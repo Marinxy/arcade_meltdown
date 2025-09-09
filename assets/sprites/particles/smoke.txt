@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/particles/smoke.png
+# Dimensions: 30x30
+# Color: #808080
+# This is a placeholder file - replace with actual sprite image

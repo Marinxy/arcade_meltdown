@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/plasma.png
+# Dimensions: 6x6
+# Color: #00FFFF
+# This is a placeholder file - replace with actual sprite image

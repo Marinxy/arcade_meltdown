@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/pellet.png
+# Dimensions: 3x3
+# Color: #C0C0C0
+# This is a placeholder file - replace with actual sprite image

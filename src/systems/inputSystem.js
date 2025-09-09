@@ -476,6 +476,4 @@ class InputSystem {
 }
 
 // Export for use in modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = InputSystem;
-}
+export default InputSystem;

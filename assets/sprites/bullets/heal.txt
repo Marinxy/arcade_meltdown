@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/bullets/heal.png
+# Dimensions: 4x4
+# Color: #00FF00
+# This is a placeholder file - replace with actual sprite image

@@ -249,7 +249,7 @@ class Player extends Entity {
         this.processInput(deltaTime, transform, physics, weapon);
         
         // Update weapon rotation to face mouse
-        const canvas = document.getElementById('gameCanvas');
+        const canvas = document.getElementById('game-canvas');
         if (canvas) {
             const rect = canvas.getBoundingClientRect();
             const mouseX = this.input.mouseX - rect.left;

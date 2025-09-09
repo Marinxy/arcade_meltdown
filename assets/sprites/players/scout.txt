@@ -1,0 +1,4 @@
+# Placeholder for assets/sprites/players/scout.png
+# Dimensions: 30x30
+# Color: #00FF00
+# This is a placeholder file - replace with actual sprite image
