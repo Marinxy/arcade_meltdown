@@ -1,0 +1,433 @@
+/**
+ * Arcade Meltdown - Map Editor Styles
+ */
+
+/* Map Editor Container */
+.map-editor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+}
+
+.map-editor.hidden {
+    display: none;
+}
+
+/* Header */
+.map-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(0, 20, 40, 0.9);
+    border-bottom: 2px solid #00ffff;
+}
+
+.map-editor-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+}
+
+.map-editor-header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.map-editor-button {
+    background-color: #0066cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.map-editor-button:hover {
+    background-color: #0088ff;
+    transform: translateY(-2px);
+}
+
+.map-editor-button:active {
+    transform: translateY(0);
+}
+
+.map-editor-close {
+    background-color: #ff3366;
+}
+
+.map-editor-close:hover {
+    background-color: #ff5588;
+}
+
+/* Content */
+.map-editor-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Toolbar */
+.map-editor-toolbar {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 10, 20, 0.9);
+    border-right: 1px solid #0066cc;
+    padding: 10px 5px;
+    gap: 10px;
+}
+
+.map-editor-tool-button {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 50, 100, 0.5);
+    border: 2px solid #0066cc;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-editor-tool-button:hover {
+    background-color: rgba(0, 80, 150, 0.7);
+    border-color: #0088ff;
+    transform: translateY(-2px);
+}
+
+.map-editor-tool-button.active {
+    background-color: rgba(0, 150, 255, 0.7);
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Editor Area */
+.map-editor-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Canvas */
+.map-editor-canvas {
+    background-color: #111111;
+    cursor: crosshair;
+    display: block;
+}
+
+/* Tile Palette */
+.map-editor-tile-palette {
+    display: flex;
+    background-color: rgba(0, 10, 20, 0.9);
+    border-top: 1px solid #0066cc;
+    padding: 10px;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #0066cc rgba(0, 10, 20, 0.9);
+}
+
+.map-editor-tile-palette::-webkit-scrollbar {
+    height: 8px;
+}
+
+.map-editor-tile-palette::-webkit-scrollbar-track {
+    background: rgba(0, 10, 20, 0.9);
+}
+
+.map-editor-tile-palette::-webkit-scrollbar-thumb {
+    background-color: #0066cc;
+    border-radius: 4px;
+}
+
+.map-editor-tile-button {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #0066cc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.3s, transform 0.2s;
+    flex-shrink: 0;
+}
+
+.map-editor-tile-button:hover {
+    border-color: #00aaff;
+    transform: translateY(-2px);
+}
+
+.map-editor-tile-button.active {
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Properties Panel */
+.map-editor-properties {
+    width: 300px;
+    background-color: rgba(0, 20, 40, 0.9);
+    border-left: 1px solid #0066cc;
+    padding: 20px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #0066cc rgba(0, 20, 40, 0.9);
+}
+
+.map-editor-properties::-webkit-scrollbar {
+    width: 8px;
+}
+
+.map-editor-properties::-webkit-scrollbar-track {
+    background: rgba(0, 20, 40, 0.9);
+}
+
+.map-editor-properties::-webkit-scrollbar-thumb {
+    background-color: #0066cc;
+    border-radius: 4px;
+}
+
+.map-editor-properties h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    color: #00ffff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.map-editor-properties label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #88ccff;
+}
+
+.map-editor-properties input,
+.map-editor-properties textarea,
+.map-editor-properties select {
+    width: 100%;
+    background-color: rgba(0, 30, 60, 0.7);
+    border: 1px solid #0066cc;
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 8px;
+    margin-bottom: 15px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+}
+
+.map-editor-properties input:focus,
+.map-editor-properties textarea:focus,
+.map-editor-properties select:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.map-editor-properties textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.map-editor-dimensions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.map-editor-dimensions label {
+    flex: 1;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-editor-dimensions input {
+    margin-bottom: 0;
+}
+
+/* Message */
+.map-editor-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background-color: rgba(0, 20, 40, 0.9);
+    border: 2px solid #0066cc;
+    border-radius: 8px;
+    padding: 15px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 3000;
+    transition: transform 0.5s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.map-editor-message.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.map-editor-message-info {
+    border-color: #0066cc;
+    color: #88ccff;
+}
+
+.map-editor-message-success {
+    border-color: #00cc66;
+    color: #88ffaa;
+}
+
+.map-editor-message-warning {
+    border-color: #cc9900;
+    color: #ffcc66;
+}
+
+.map-editor-message-error {
+    border-color: #cc3366;
+    color: #ff88aa;
+}
+
+/* Load Dialog */
+.map-editor-load-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 20, 40, 0.95);
+    border: 2px solid #00ffff;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 400px;
+    max-width: 80%;
+    max-height: 80%;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.map-editor-load-dialog.hidden {
+    display: none;
+}
+
+.map-editor-load-dialog h3 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #00ffff;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.map-editor-load-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #0066cc rgba(0, 20, 40, 0.95);
+}
+
+.map-editor-load-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.map-editor-load-list::-webkit-scrollbar-track {
+    background: rgba(0, 20, 40, 0.95);
+}
+
+.map-editor-load-list::-webkit-scrollbar-thumb {
+    background-color: #0066cc;
+    border-radius: 4px;
+}
+
+.map-editor-load-item {
+    background-color: rgba(0, 30, 60, 0.7);
+    border: 1px solid #0066cc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.map-editor-load-item:hover {
+    background-color: rgba(0, 50, 100, 0.7);
+    border-color: #0088ff;
+}
+
+.map-editor-load-item h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.map-editor-load-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #88ccff;
+}
+
+.map-editor-load-item .map-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #66aadd;
+}
+
+.map-editor-load-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .map-editor-content {
+        flex-direction: column;
+    }
+    
+    .map-editor-toolbar {
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid #0066cc;
+        padding: 5px 10px;
+        overflow-x: auto;
+    }
+    
+    .map-editor-properties {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #0066cc;
+        max-height: 40%;
+    }
+    
+    .map-editor-tile-palette {
+        padding: 5px;
+    }
+    
+    .map-editor-tile-button {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .map-editor-load-dialog {
+        min-width: 90%;
+        max-width: 90%;
+    }
+}

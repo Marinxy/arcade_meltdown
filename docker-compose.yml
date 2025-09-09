@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  arcade-meltdown:
+    build: .
+    container_name: arcade-meltdown
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - arcade-network
+
+networks:
+  arcade-network:
+    driver: bridge

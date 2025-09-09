@@ -1,0 +1,33 @@
+{
+  "name": "arcade-meltdown",
+  "version": "1.0.0",
+  "description": "A local multiplayer arcade game with wave-based combat and chaos mechanics",
+  "main": "index.html",
+  "scripts": {
+    "start": "node run-game.js",
+    "dev": "node run-game.js",
+    "build": "echo 'No build step required for this project'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "game",
+    "arcade",
+    "multiplayer",
+    "local-multiplayer",
+    "wave-based",
+    "canvas",
+    "javascript",
+    "html5"
+  ],
+  "author": "Arcade Meltdown Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/example/arcade-meltdown.git"
+  },
+  "bugs": {
+    "url": "https://github.com/example/arcade-meltdown/issues"
+  },
+  "homepage": "https://github.com/example/arcade-meltdown#readme"
+}

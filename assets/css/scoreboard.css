@@ -1,0 +1,178 @@
+/**
+ * Arcade Meltdown - Scoreboard Styles
+ * Styles for the scoreboard UI component
+ */
+
+/* Scoreboard Container */
+.scoreboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+}
+
+.scoreboard-container {
+    background-color: rgba(0, 20, 40, 0.9);
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+}
+
+.scoreboard-container h1 {
+    font-size: 36px;
+    color: #00ffff;
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+}
+
+/* Scoreboard Stats */
+.scoreboard-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: rgba(0, 50, 100, 0.3);
+    border-radius: 10px;
+}
+
+.scoreboard-stat {
+    text-align: center;
+}
+
+.scoreboard-stat .stat-label {
+    font-size: 14px;
+    color: #88ccff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.scoreboard-stat .stat-value {
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Scoreboard Players */
+.scoreboard-players {
+    margin-bottom: 30px;
+}
+
+.scoreboard-players h2 {
+    font-size: 24px;
+    color: #00ffff;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.scoreboard-players-list {
+    background-color: rgba(0, 50, 100, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.scoreboard-player-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0, 102, 204, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.scoreboard-player-item:last-child {
+    border-bottom: none;
+}
+
+.scoreboard-player-item:hover {
+    background-color: rgba(0, 50, 100, 0.5);
+}
+
+.player-rank {
+    width: 40px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffff00;
+    text-align: center;
+}
+
+.player-name {
+    flex: 1;
+    font-size: 18px;
+    color: #ffffff;
+    margin-left: 15px;
+}
+
+.player-class {
+    width: 100px;
+    font-size: 14px;
+    color: #88ccff;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.player-score {
+    width: 100px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #00ff88;
+    text-align: right;
+}
+
+.player-title {
+    width: 150px;
+    font-size: 14px;
+    color: #ff88ff;
+    text-align: right;
+    margin-left: 15px;
+    font-style: italic;
+}
+
+/* Scoreboard Buttons */
+.scoreboard-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .scoreboard-container {
+        padding: 20px;
+    }
+    
+    .scoreboard-container h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    
+    .scoreboard-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .scoreboard-player-item {
+        flex-wrap: wrap;
+    }
+    
+    .player-rank,
+    .player-name,
+    .player-class,
+    .player-score,
+    .player-title {
+        width: 100%;
+        margin: 5px 0;
+        text-align: center;
+    }
+}

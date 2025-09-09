@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Meltdown</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/ui.css">
+    <link rel="stylesheet" href="assets/css/scoreboard.css">
+    <link rel="stylesheet" href="assets/css/mapEditor.css">
+    <link rel="stylesheet" href="assets/css/expansionSoundtrackUI.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <h1>ARCADE MELTDOWN</h1>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="main-menu hidden">
+        <div class="menu-container">
+            <h1>ARCADE MELTDOWN</h1>
+            <div class="menu-buttons">
+                <button id="play-button" class="menu-button">Play</button>
+                <button id="class-select-button" class="menu-button">Select Class</button>
+                <button id="cosmetics-button" class="menu-button">Cosmetics</button>
+                <button id="map-editor-button" class="menu-button">Map Editor</button>
+                <button id="soundtrack-button" class="menu-button">Soundtrack</button>
+                <button id="options-button" class="menu-button">Options</button>
+                <button id="quit-button" class="menu-button">Quit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Selection -->
+    <div id="class-select" class="class-select hidden">
+        <div class="class-select-container">
+            <h1>SELECT CLASS</h1>
+            <div class="class-grid">
+                <div class="class-card" data-class="grunt">
+                    <div class="class-icon">🛡️</div>
+                    <h3>Grunt</h3>
+                    <p>Balanced class with average stats</p>
+                    <ul>
+                        <li>Health: 100</li>
+                        <li>Speed: 5</li>
+                        <li>Damage: 10</li>
+                    </ul>
+                </div>
+                <div class="class-card" data-class="heavy">
+                    <div class="class-icon">🔧</div>
+                    <h3>Heavy</h3>
+                    <p>High health, slow movement</p>
+                    <ul>
+                        <li>Health: 200</li>
+                        <li>Speed: 3</li>
+                        <li>Damage: 15</li>
+                    </ul>
+                </div>
+                <div class="class-card" data-class="scout">
+                    <div class="class-icon">⚡</div>
+                    <h3>Scout</h3>
+                    <p>Low health, fast movement</p>
+                    <ul>
+                        <li>Health: 70</li>
+                        <li>Speed: 8</li>
+                        <li>Damage: 8</li>
+                    </ul>
+                </div>
+                <div class="class-card" data-class="engineer">
+                    <div class="class-icon">🔨</div>
+                    <h3>Engineer</h3>
+                    <p>Can build turrets and barriers</p>
+                    <ul>
+                        <li>Health: 90</li>
+                        <li>Speed: 4</li>
+                        <li>Damage: 12</li>
+                    </ul>
+                </div>
+                <div class="class-card" data-class="medic">
+                    <div class="class-icon">💊</div>
+                    <h3>Medic</h3>
+                    <p>Can heal other players</p>
+                    <ul>
+                        <li>Health: 80</li>
+                        <li>Speed: 6</li>
+                        <li>Damage: 7</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="class-select-buttons">
+                <button id="class-select-back" class="menu-button">Back</button>
+                <button id="class-select-confirm" class="menu-button">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <div id="game-container" class="game-container hidden">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD -->
+        <div id="hud" class="hud hidden">
+            <div class="hud-top">
+                <div class="hud-left">
+                    <div class="hud-health">
+                        <div class="hud-label">HEALTH</div>
+                        <div class="hud-bar">
+                            <div class="hud-fill health-fill"></div>
+                        </div>
+                        <div class="hud-value health-value">100/100</div>
+                    </div>
+                    <div class="hud-weapon">
+                        <div class="hud-label">WEAPON</div>
+                        <div class="hud-weapon-name">Assault Rifle</div>
+                        <div class="hud-weapon-ammo">30/90</div>
+                    </div>
+                </div>
+                <div class="hud-center">
+                    <div class="hud-wave">
+                        WAVE <span id="hud-wave-number">1</span>
+                    </div>
+                    <div class="hud-chaos">
+                        CHAOS <span id="hud-chaos-value">0%</span>
+                    </div>
+                </div>
+                <div class="hud-right">
+                    <div class="hud-score">
+                        <div class="hud-label">SCORE</div>
+                        <div class="hud-value score-value">0</div>
+                    </div>
+                    <div class="hud-enemies">
+                        <div class="hud-label">ENEMIES</div>
+                        <div class="hud-value enemies-value">5</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-bottom">
+                <div class="hud-powerups">
+                    <div class="hud-label">POWER-UPS</div>
+                    <div class="hud-powerup-slots">
+                        <div class="hud-powerup-slot empty" data-slot="1"></div>
+                        <div class="hud-powerup-slot empty" data-slot="2"></div>
+                    </div>
+                </div>
+                <div class="hud-controls">
+                    <div class="hud-control">
+                        <span class="key">WASD</span> Move
+                    </div>
+                    <div class="hud-control">
+                        <span class="key">MOUSE</span> Aim/Shoot
+                    </div>
+                    <div class="hud-control">
+                        <span class="key">1-5</span> Weapons
+                    </div>
+                    <div class="hud-control">
+                        <span class="key">Q/E</span> Power-ups
+                    </div>
+                    <div class="hud-control">
+                        <span class="key">ESC</span> Pause
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="pause-menu hidden">
+            <div class="pause-container">
+                <h1>PAUSED</h1>
+                <div class="pause-buttons">
+                    <button id="resume-button" class="menu-button">Resume</button>
+                    <button id="restart-button" class="menu-button">Restart</button>
+                    <button id="main-menu-button" class="menu-button">Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="game-over hidden">
+            <div class="game-over-container">
+                <h1>GAME OVER</h1>
+                <div class="game-over-stats">
+                    <div class="game-over-stat">
+                        <span class="stat-label">Final Score:</span>
+                        <span id="final-score" class="stat-value">0</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span class="stat-label">Waves Survived:</span>
+                        <span id="waves-survived" class="stat-value">0</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span class="stat-label">Enemies Defeated:</span>
+                        <span id="enemies-defeated" class="stat-value">0</span>
+                    </div>
+                </div>
+                <div class="game-over-buttons">
+                    <button id="play-again-button" class="menu-button">Play Again</button>
+                    <button id="game-over-main-menu-button" class="menu-button">Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoreboard -->
+        <div id="scoreboard" class="scoreboard hidden">
+            <div class="scoreboard-container">
+                <h1>WAVE COMPLETE</h1>
+                <div class="scoreboard-stats">
+                    <div class="scoreboard-stat">
+                        <span class="stat-label">Current Score:</span>
+                        <span id="current-score" class="stat-value">0</span>
+                    </div>
+                    <div class="scoreboard-stat">
+                        <span class="stat-label">Wave:</span>
+                        <span id="wave-number" class="stat-value">1</span>
+                    </div>
+                    <div class="scoreboard-stat">
+                        <span class="stat-label">Enemies Defeated:</span>
+                        <span id="wave-enemies-defeated" class="stat-value">0</span>
+                    </div>
+                </div>
+                <div class="scoreboard-players">
+                    <h2>PLAYER RANKINGS</h2>
+                    <div class="scoreboard-players-list" id="scoreboard-players-list">
+                        <!-- Player rankings will be populated here -->
+                    </div>
+                </div>
+                <div class="scoreboard-buttons">
+                    <button id="continue-button" class="menu-button">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Options Menu -->
+    <div id="options-menu" class="options-menu hidden">
+        <div class="options-container">
+            <h1>OPTIONS</h1>
+            <div class="options-tabs">
+                <button class="options-tab active" data-tab="graphics">Graphics</button>
+                <button class="options-tab" data-tab="audio">Audio</button>
+                <button class="options-tab" data-tab="controls">Controls</button>
+                <button class="options-tab" data-tab="gameplay">Gameplay</button>
+            </div>
+            <div class="options-content">
+                <div class="options-panel active" id="graphics-options">
+                    <div class="option-group">
+                        <h3>Display</h3>
+                        <div class="option">
+                            <label for="resolution">Resolution:</label>
+                            <select id="resolution">
+                                <option value="800x600">800x600</option>
+                                <option value="1024x768">1024x768</option>
+                                <option value="1280x720" selected>1280x720</option>
+                                <option value="1920x1080">1920x1080</option>
+                            </select>
+                        </div>
+                        <div class="option">
+                            <label for="fullscreen">Fullscreen:</label>
+                            <input type="checkbox" id="fullscreen">
+                        </div>
+                        <div class="option">
+                            <label for="vsync">V-Sync:</label>
+                            <input type="checkbox" id="vsync" checked>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <h3>Quality</h3>
+                        <div class="option">
+                            <label for="quality">Quality:</label>
+                            <select id="quality">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high" selected>High</option>
+                                <option value="ultra">Ultra</option>
+                            </select>
+                        </div>
+                        <div class="option">
+                            <label for="particles">Particles:</label>
+                            <input type="checkbox" id="particles" checked>
+                        </div>
+                        <div class="option">
+                            <label for="shadows">Shadows:</label>
+                            <input type="checkbox" id="shadows" checked>
+                        </div>
+                    </div>
+                </div>
+                <div class="options-panel" id="audio-options">
+                    <div class="option-group">
+                        <h3>Volume</h3>
+                        <div class="option">
+                            <label for="master-volume">Master Volume:</label>
+                            <input type="range" id="master-volume" min="0" max="100" value="80">
+                            <span class="option-value">80%</span>
+                        </div>
+                        <div class="option">
+                            <label for="music-volume">Music Volume:</label>
+                            <input type="range" id="music-volume" min="0" max="100" value="70">
+                            <span class="option-value">70%</span>
+                        </div>
+                        <div class="option">
+                            <label for="sfx-volume">SFX Volume:</label>
+                            <input type="range" id="sfx-volume" min="0" max="100" value="80">
+                            <span class="option-value">80%</span>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <h3>Audio Settings</h3>
+                        <div class="option">
+                            <label for="soundpack">Sound Pack:</label>
+                            <select id="soundpack">
+                                <option value="default" selected>Default</option>
+                                <option value="retro">Retro</option>
+                                <option value="modern">Modern</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="options-panel" id="controls-options">
+                    <div class="option-group">
+                        <h3>Movement</h3>
+                        <div class="option">
+                            <label>Move Forward:</label>
+                            <span class="key-binding">W</span>
+                        </div>
+                        <div class="option">
+                            <label>Move Backward:</label>
+                            <span class="key-binding">S</span>
+                        </div>
+                        <div class="option">
+                            <label>Move Left:</label>
+                            <span class="key-binding">A</span>
+                        </div>
+                        <div class="option">
+                            <label>Move Right:</label>
+                            <span class="key-binding">D</span>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <h3>Combat</h3>
+                        <div class="option">
+                            <label>Primary Fire:</label>
+                            <span class="key-binding">Mouse 1</span>
+                        </div>
+                        <div class="option">
+                            <label>Secondary Fire:</label>
+                            <span class="key-binding">Mouse 2</span>
+                        </div>
+                        <div class="option">
+                            <label>Reload:</label>
+                            <span class="key-binding">R</span>
+                        </div>
+                        <div class="option">
+                            <label>Switch Weapon:</label>
+                            <span class="key-binding">1-5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="options-panel" id="gameplay-options">
+                    <div class="option-group">
+                        <h3>Difficulty</h3>
+                        <div class="option">
+                            <label for="difficulty">Difficulty:</label>
+                            <select id="difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="hard">Hard</option>
+                                <option value="insane">Insane</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <h3>Game Settings</h3>
+                        <div class="option">
+                            <label for="friendly-fire">Friendly Fire:</label>
+                            <input type="checkbox" id="friendly-fire">
+                        </div>
+                        <div class="option">
+                            <label for="auto-reload">Auto Reload:</label>
+                            <input type="checkbox" id="auto-reload" checked>
+                        </div>
+                        <div class="option">
+                            <label for="aim-assist">Aim Assist:</label>
+                            <input type="checkbox" id="aim-assist">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="options-buttons">
+                <button id="apply-options" class="menu-button">Apply</button>
+                <button id="reset-options" class="menu-button">Reset to Default</button>
+                <button id="back-options" class="menu-button">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

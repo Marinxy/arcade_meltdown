@@ -1,0 +1,271 @@
+/**
+ * Arcade Meltdown - UI Styles
+ * Basic UI component styles
+ */
+
+/* UI Container */
+.ui-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ui-panel {
+    background-color: rgba(0, 20, 40, 0.9);
+    border: 2px solid #0066cc;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0, 102, 204, 0.5);
+}
+
+.ui-title {
+    font-size: 24px;
+    color: #00ffff;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.ui-content {
+    color: #ffffff;
+}
+
+.ui-button {
+    background-color: rgba(0, 102, 204, 0.5);
+    border: 2px solid #0066cc;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ui-button:hover {
+    background-color: rgba(0, 102, 204, 0.8);
+    border-color: #00aaff;
+}
+
+.ui-button:active {
+    transform: translateY(2px);
+}
+
+.ui-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.ui-close:hover {
+    color: #ff0066;
+}
+
+.ui-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ui-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ui-form-label {
+    color: #88ccff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ui-form-input,
+.ui-form-select,
+.ui-form-textarea {
+    background-color: rgba(0, 50, 100, 0.5);
+    border: 1px solid #0066cc;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+}
+
+.ui-form-input:focus,
+.ui-form-select:focus,
+.ui-form-textarea:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.ui-form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.ui-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ui-list-item {
+    background-color: rgba(0, 50, 100, 0.3);
+    border: 1px solid #0066cc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.ui-list-item:hover {
+    background-color: rgba(0, 50, 100, 0.5);
+    border-color: #00aaff;
+}
+
+.ui-list-item:last-child {
+    margin-bottom: 0;
+}
+
+.ui-grid {
+    display: grid;
+    grid-gap: 15px;
+}
+
+.ui-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.ui-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.ui-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.ui-tabs {
+    display: flex;
+    border-bottom: 2px solid rgba(0, 102, 204, 0.5);
+    margin-bottom: 15px;
+}
+
+.ui-tab {
+    padding: 10px 20px;
+    background-color: rgba(0, 50, 100, 0.3);
+    border: 1px solid #0066cc;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    color: #88ccff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 5px;
+}
+
+.ui-tab:hover {
+    background-color: rgba(0, 50, 100, 0.5);
+    border-color: #00aaff;
+}
+
+.ui-tab.active {
+    background-color: rgba(0, 102, 204, 0.5);
+    border-color: #00ffff;
+    color: #ffffff;
+}
+
+.ui-tab-content {
+    display: none;
+}
+
+.ui-tab-content.active {
+    display: block;
+}
+
+.ui-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background-color: rgba(0, 20, 40, 0.9);
+    border: 2px solid #0066cc;
+    border-radius: 8px;
+    padding: 15px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 3000;
+    transition: transform 0.5s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.ui-message.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.ui-message-info {
+    border-color: #0066cc;
+    color: #88ccff;
+}
+
+.ui-message-success {
+    border-color: #00cc66;
+    color: #88ffaa;
+}
+
+.ui-message-warning {
+    border-color: #cc9900;
+    color: #ffcc66;
+}
+
+.ui-message-error {
+    border-color: #cc3366;
+    color: #ff88aa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .ui-panel {
+        max-width: 95%;
+        max-height: 95%;
+        padding: 15px;
+    }
+    
+    .ui-grid-2,
+    .ui-grid-3,
+    .ui-grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .ui-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .ui-tab {
+        margin-bottom: 5px;
+    }
+}
