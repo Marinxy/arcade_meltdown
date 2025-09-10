@@ -244,6 +244,14 @@ class Bullet extends Entity {
     }
     
     /**
+     * Handle collision (called by collision system)
+     */
+    onCollision() {
+        // Destroy bullet on collision
+        this.destroy();
+    }
+    
+    /**
      * Damage an entity
      * @param {Entity} entity - Entity to damage
      */
@@ -282,6 +290,65 @@ class Bullet extends Entity {
         
         // Emit splash damage event
         window.eventSystem.emit('bullet:splash', this, impactTransform.x, impactTransform.y, this.splashRadius, this.splashDamage);
+    }
+    
+    /**
+     * Render the bullet
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
+     */
+    render(ctx) {
+        const transform = this.getComponent('Transform');
+        const render = this.getComponent('Render');
+        
+        if (!transform || !render || !render.visible) return;
+        
+        ctx.save();
+        ctx.translate(transform.x, transform.y);
+        ctx.rotate(transform.rotation);
+        
+        // Draw bullet based on type
+        ctx.fillStyle = render.color;
+        
+        switch (this.type) {
+            case 'bullet':
+                ctx.fillRect(-2, -1, 4, 2);
+                break;
+            case 'pellet':
+                ctx.beginPath();
+                ctx.arc(0, 0, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'plasma':
+                ctx.beginPath();
+                ctx.arc(0, 0, 3, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'rocket':
+                ctx.fillRect(-4, -2, 8, 4);
+                break;
+            case 'spit':
+                ctx.beginPath();
+                ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'flame':
+                ctx.beginPath();
+                ctx.moveTo(0, -5);
+                ctx.lineTo(3, 0);
+                ctx.lineTo(0, 5);
+                ctx.lineTo(-3, 0);
+                ctx.closePath();
+                ctx.fill();
+                break;
+            case 'heal':
+                ctx.fillRect(-1, -3, 2, 6);
+                ctx.fillRect(-3, -1, 6, 2);
+                break;
+            default:
+                ctx.fillRect(-2, -2, 4, 4);
+        }
+        
+        ctx.restore();
     }
     
     /**

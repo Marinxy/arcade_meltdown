@@ -5,7 +5,7 @@
 
 // Import required modules
 import GameEngine from './core/gameEngine.js';
-import Config from './core/config.js';
+import Config from './config.js';
 import EventSystem from './core/eventSystem.js';
 import UI from './ui/ui.js';
 import Player from './entities/player.js';
@@ -26,12 +26,14 @@ let ui = null;
  */
 function init() {
     // Initialize config system
-    window.config = new Config();
-    window.config.init();
+    config = new Config();
+    config.init();
+    window.config = config;
     
     // Initialize event system
-    window.eventSystem = new EventSystem();
-    window.eventSystem.init();
+    eventSystem = new EventSystem();
+    eventSystem.init();
+    window.eventSystem = eventSystem;
     
     // Initialize UI
     ui = new UI();
@@ -52,8 +54,8 @@ function init() {
         canvas.height = height;
         
         // Update config
-        window.config.set('graphics.canvasWidth', width);
-        window.config.set('graphics.canvasHeight', height);
+        config.set('graphics.canvasWidth', width);
+        config.set('graphics.canvasHeight', height);
         
         // Update game engine if it exists
         if (gameEngine) {
@@ -125,7 +127,7 @@ function setupUIEventListeners() {
     
     document.getElementById('map-editor-button')?.addEventListener('click', () => {
         // Start map editor
-        window.eventSystem.emit('editor:start');
+        eventSystem.emit('editor:start');
     });
     
     document.getElementById('soundtrack-button')?.addEventListener('click', () => {
@@ -287,21 +289,21 @@ function applyOptions() {
     }
     
     const vsync = document.getElementById('vsync')?.checked;
-    window.config.set('graphics.vsync', vsync);
+    config.set('graphics.vsync', vsync);
     
     const quality = document.getElementById('quality')?.value;
-    window.config.set('graphics.quality', quality);
+    config.set('graphics.quality', quality);
     
     const particles = document.getElementById('particles')?.checked;
-    window.config.set('graphics.particles', particles);
+    config.set('graphics.particles', particles);
     
     const shadows = document.getElementById('shadows')?.checked;
-    window.config.set('graphics.shadows', shadows);
+    config.set('graphics.shadows', shadows);
     
     // Audio options
     const masterVolume = document.getElementById('master-volume')?.value;
     if (masterVolume !== undefined) {
-        window.config.set('audio.masterVolume', masterVolume / 100);
+        config.set('audio.masterVolume', masterVolume / 100);
         // Update audio system volume
         if (gameEngine.audioSystem) {
             gameEngine.audioSystem.setMasterVolume(masterVolume / 100);
@@ -310,7 +312,7 @@ function applyOptions() {
     
     const musicVolume = document.getElementById('music-volume')?.value;
     if (musicVolume !== undefined) {
-        window.config.set('audio.musicVolume', musicVolume / 100);
+        config.set('audio.musicVolume', musicVolume / 100);
         // Update audio system music volume
         if (gameEngine.audioSystem) {
             gameEngine.audioSystem.setMusicVolume(musicVolume / 100);
@@ -319,7 +321,7 @@ function applyOptions() {
     
     const sfxVolume = document.getElementById('sfx-volume')?.value;
     if (sfxVolume !== undefined) {
-        window.config.set('audio.sfxVolume', sfxVolume / 100);
+        config.set('audio.sfxVolume', sfxVolume / 100);
         // Update audio system SFX volume
         if (gameEngine.audioSystem) {
             gameEngine.audioSystem.setSfxVolume(sfxVolume / 100);
@@ -327,23 +329,23 @@ function applyOptions() {
     }
     
     const soundpack = document.getElementById('soundpack')?.value;
-    window.config.set('audio.soundpack', soundpack);
+    config.set('audio.soundpack', soundpack);
     
     // Gameplay options
     const difficulty = document.getElementById('difficulty')?.value;
-    window.config.set('game.difficulty', difficulty);
+    config.set('game.difficulty', difficulty);
     
     const friendlyFire = document.getElementById('friendly-fire')?.checked;
-    window.config.set('game.friendlyFire', friendlyFire);
+    config.set('game.friendlyFire', friendlyFire);
     
     const autoReload = document.getElementById('auto-reload')?.checked;
-    window.config.set('game.autoReload', autoReload);
+    config.set('game.autoReload', autoReload);
     
     const aimAssist = document.getElementById('aim-assist')?.checked;
-    window.config.set('game.aimAssist', aimAssist);
+    config.set('game.aimAssist', aimAssist);
     
     // Save config
-    window.config.save();
+    config.save();
 }
 
 /**
@@ -371,8 +373,8 @@ function resetOptions() {
     document.getElementById('aim-assist').checked = false;
     
     // Reset config
-    window.config.reset();
-    window.config.save();
+    config.reset();
+    config.save();
 }
 
 /**
@@ -397,7 +399,7 @@ window.showGameOver = () => {
     let enemiesDefeated = 0;
     for (let i = 1; i < gameEngine.wave; i++) {
         const baseEnemyCount = 5;
-        enemiesDefeated += Math.floor(baseEnemyCount * Math.pow(window.config.get('game.waveScaling'), i - 1));
+        enemiesDefeated += Math.floor(baseEnemyCount * Math.pow(config.get('game.waveScaling'), i - 1));
     }
     document.getElementById('enemies-defeated').textContent = enemiesDefeated;
 };
@@ -412,7 +414,7 @@ window.showScoreboard = () => {
     // Calculate enemies defeated in this wave
     let enemiesDefeated = 0;
     const baseEnemyCount = 5;
-    enemiesDefeated = Math.floor(baseEnemyCount * Math.pow(window.config.get('game.waveScaling'), gameEngine.wave - 1));
+    enemiesDefeated = Math.floor(baseEnemyCount * Math.pow(config.get('game.waveScaling'), gameEngine.wave - 1));
     document.getElementById('wave-enemies-defeated').textContent = enemiesDefeated;
     
     // Update player rankings

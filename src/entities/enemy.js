@@ -66,17 +66,21 @@ class Enemy extends Entity {
         
         if (!enemyConfig) {
             console.error(`Invalid enemy type: ${enemyType}`);
-            return;
+            // Use default values
+            this.health = 50;
+            this.speed = 100;
+            this.damage = 10;
+            this.points = 10;
+        } else {
+            // Scale stats with wave number
+            const waveMultiplier = 1 + (wave - 1) * 0.2;
+            
+            // Set enemy properties
+            this.health = Math.floor(enemyConfig.health * waveMultiplier);
+            this.speed = enemyConfig.speed;
+            this.damage = Math.floor(enemyConfig.damage * waveMultiplier);
+            this.points = Math.floor(enemyConfig.points * waveMultiplier);
         }
-        
-        // Scale stats with wave number
-        const waveMultiplier = 1 + (wave - 1) * 0.2;
-        
-        // Set enemy properties
-        this.health = Math.floor(enemyConfig.health * waveMultiplier);
-        this.speed = enemyConfig.speed;
-        this.damage = Math.floor(enemyConfig.damage * waveMultiplier);
-        this.points = Math.floor(enemyConfig.points * waveMultiplier);
         
         // Set type-specific properties
         this.setTypeSpecificProperties(enemyType);
@@ -92,7 +96,7 @@ class Enemy extends Entity {
                 this.detectionRange = 300;
                 this.attackRange = 30;
                 this.attackCooldown = 1000;
-                this.color = '#ff5555';
+                this.color = '#800080';
                 this.size = 20;
                 break;
                 
@@ -100,7 +104,7 @@ class Enemy extends Entity {
                 this.detectionRange = 400;
                 this.attackRange = 250;
                 this.attackCooldown = 2000;
-                this.color = '#55ff55';
+                this.color = '#00FFFF';
                 this.size = 25;
                 this.projectileSpeed = 300;
                 break;
@@ -109,7 +113,7 @@ class Enemy extends Entity {
                 this.detectionRange = 250;
                 this.attackRange = 40;
                 this.attackCooldown = 1500;
-                this.color = '#ff55ff';
+                this.color = '#FF4500';
                 this.size = 35;
                 this.chargeSpeed = this.speed * 2;
                 this.chargeCooldown = 5000;
@@ -120,7 +124,7 @@ class Enemy extends Entity {
                 this.detectionRange = 500;
                 this.attackRange = 100;
                 this.attackCooldown = 3000;
-                this.color = '#ffff55';
+                this.color = '#FFD700';
                 this.size = 50;
                 this.specialAttackCooldown = 10000;
                 this.specialAttackTimer = 0;
@@ -130,7 +134,7 @@ class Enemy extends Entity {
                 this.detectionRange = 600;
                 this.attackRange = 150;
                 this.attackCooldown = 2000;
-                this.color = '#ff0000';
+                this.color = '#DC143C';
                 this.size = 80;
                 this.specialAttackCooldown = 15000;
                 this.specialAttackTimer = 0;
@@ -604,6 +608,27 @@ class Enemy extends Entity {
     performMeleeAttack(transform, targetTransform, knockback = false) {
         // Emit melee attack event
         window.eventSystem.emit('enemy:meleeAttack', this, this.target, knockback);
+        
+        // Apply damage directly to target
+        const health = this.target.getComponent('Health');
+        if (health) {
+            health.takeDamage(this.damage, this);
+        }
+        
+        // Apply knockback if specified
+        if (knockback) {
+            const physics = this.target.getComponent('Physics');
+            if (physics) {
+                const angle = MathUtils.angle(
+                    transform.x, transform.y,
+                    targetTransform.x, targetTransform.y
+                );
+                physics.applyForce(
+                    Math.cos(angle) * 300,
+                    Math.sin(angle) * 300
+                );
+            }
+        }
     }
     
     /**
@@ -618,18 +643,26 @@ class Enemy extends Entity {
             targetTransform.x, targetTransform.y
         );
         
-        const projectile = {
-            type: 'spit',
-            x: transform.x,
-            y: transform.y,
-            vx: Math.cos(angle) * this.projectileSpeed,
-            vy: Math.sin(angle) * this.projectileSpeed,
-            damage: this.damage,
-            owner: this
-        };
-        
-        // Emit projectile attack event
-        window.eventSystem.emit('enemy:projectileAttack', this, projectile);
+        // Create bullet
+        import('./bullet.js').then(({ default: Bullet }) => {
+            const bullet = new Bullet(
+                transform.x + Math.cos(angle) * this.size,
+                transform.y + Math.sin(angle) * this.size,
+                angle,
+                this.projectileSpeed,
+                this.damage,
+                'spit',
+                this
+            );
+            
+            // Add bullet to game engine
+            this.gameEngine.addEntity(bullet);
+            
+            // Emit projectile attack event
+            window.eventSystem.emit('enemy:projectileAttack', this, bullet);
+        }).catch(error => {
+            console.error('Failed to create bullet:', error);
+        });
     }
     
     /**
@@ -640,6 +673,12 @@ class Enemy extends Entity {
     performSpecialMeleeAttack(transform, targetTransform) {
         // Emit special melee attack event
         window.eventSystem.emit('enemy:specialMeleeAttack', this, this.target);
+        
+        // Apply enhanced damage
+        const health = this.target.getComponent('Health');
+        if (health) {
+            health.takeDamage(this.damage * 1.5, this);
+        }
     }
     
     /**
@@ -649,6 +688,25 @@ class Enemy extends Entity {
     performAOEAttack(transform) {
         // Emit AOE attack event
         window.eventSystem.emit('enemy:aoeAttack', this, transform.x, transform.y, 150);
+        
+        // Find all players within range and damage them
+        const players = this.gameEngine.getEntitiesByTag('player');
+        for (const player of players) {
+            const playerTransform = player.getComponent('Transform');
+            if (!playerTransform) continue;
+            
+            const distance = MathUtils.distance(
+                transform.x, transform.y,
+                playerTransform.x, playerTransform.y
+            );
+            
+            if (distance <= 150) {
+                const health = player.getComponent('Health');
+                if (health) {
+                    health.takeDamage(this.damage, this);
+                }
+            }
+        }
     }
     
     /**
@@ -728,6 +786,61 @@ class Enemy extends Entity {
                 this.stateTimer = 0;
             }
         }
+    }
+    
+    /**
+     * Render the enemy
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
+     */
+    render(ctx) {
+        const transform = this.getComponent('Transform');
+        const render = this.getComponent('Render');
+        
+        if (!transform || !render || !render.visible) return;
+        
+        ctx.save();
+        ctx.translate(transform.x, transform.y);
+        ctx.rotate(transform.rotation);
+        
+        // Draw enemy based on type
+        ctx.fillStyle = render.color;
+        
+        switch (this.enemyType) {
+            case 'grunt':
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'spitter':
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size / 2, this.size / 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'bruiser':
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                break;
+            case 'miniBoss':
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size / 2);
+                ctx.lineTo(this.size / 2, 0);
+                ctx.lineTo(0, this.size / 2);
+                ctx.lineTo(-this.size / 2, 0);
+                ctx.closePath();
+                ctx.fill();
+                break;
+            case 'boss':
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                // Draw core
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size / 4, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            default:
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        }
+        
+        ctx.restore();
     }
     
     /**

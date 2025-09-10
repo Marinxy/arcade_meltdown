@@ -5,12 +5,13 @@
 
 import GameLoop from './gameLoop.js';
 import AudioSystem from '../systems/audioSystem.js';
-// import CosmeticSystem from '../systems/cosmeticSystem.js';
-// import CommunityMapSystem from '../systems/communityMapSystem.js';
-// import ExpansionSoundtrackSystem from '../systems/expansionSoundtrackSystem.js';
+import CosmeticSystem from '../systems/cosmeticSystem.js';
+import CommunityMapSystem from '../systems/communityMapSystem.js';
+import ExpansionSoundtrackSystem from '../systems/expansionSoundtrackSystem.js';
 import InputSystem from '../systems/inputSystem.js';
 import RenderSystem from '../systems/renderSystem.js';
 import PhysicsSystem from '../systems/physicsSystem.js';
+import CollisionSystem from '../systems/collisionSystem.js';
 
 class GameEngine {
     /**
@@ -56,6 +57,7 @@ class GameEngine {
         this.waveTimer = 0;
         this.enemiesRemaining = 0;
         this.waveEnemies = [];
+        this.spawnTimer = 0;
         
         // Initialize the engine
         this.init();
@@ -106,9 +108,6 @@ class GameEngine {
      * Initialize systems
      */
     initSystems() {
-        // Systems will be added as they are implemented
-        // For now, we'll just create empty placeholders
-        
         // Input system
         this.inputSystem = new InputSystem(this);
         
@@ -116,11 +115,7 @@ class GameEngine {
         this.physicsSystem = new PhysicsSystem(this);
         
         // Collision system
-        this.collisionSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            destroy: () => {}
-        };
+        this.collisionSystem = new CollisionSystem(this);
         
         // Render system
         this.renderSystem = new RenderSystem(this);
@@ -128,26 +123,14 @@ class GameEngine {
         // Audio system
         this.audioSystem = new AudioSystem(this);
         
-        // Cosmetic system (temporarily disabled)
-        this.cosmeticSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            destroy: () => {}
-        };
+        // Cosmetic system
+        this.cosmeticSystem = new CosmeticSystem(this);
         
-        // Community map system (temporarily disabled)
-        this.communityMapSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            destroy: () => {}
-        };
+        // Community map system
+        this.communityMapSystem = new CommunityMapSystem(this);
         
-        // Expansion soundtrack system (temporarily disabled)
-        this.expansionSoundtrackSystem = {
-            init: () => {},
-            update: (deltaTime) => {},
-            destroy: () => {}
-        };
+        // Expansion soundtrack system
+        this.expansionSoundtrackSystem = new ExpansionSoundtrackSystem(this);
         
         // Add systems to the list
         this.systems.push(
@@ -234,7 +217,8 @@ class GameEngine {
         this.chaosLevel = 0;
         this.playerClass = playerClass;
         this.waveState = 'preparation';
-        this.waveTimer = window.config.get('game.preparationPhaseTime') / 1000; // Convert to seconds
+        this.waveTimer = window.config.get('game.preparationPhaseTime') / 1000 || 10; // Convert to seconds
+        this.spawnTimer = 0;
         
         // Clear existing entities
         for (const [id, entity] of this.entities) {
@@ -282,11 +266,11 @@ class GameEngine {
      */
     startWave() {
         this.waveState = 'preparation';
-        this.waveTimer = window.config.get('game.preparationPhaseTime') / 1000; // Convert to seconds
+        this.waveTimer = window.config.get('game.preparationPhaseTime') / 1000 || 10; // Convert to seconds
         
         // Calculate number of enemies based on wave
         const baseEnemyCount = 5;
-        const enemyCount = Math.floor(baseEnemyCount * Math.pow(window.config.get('game.waveScaling'), this.wave - 1));
+        const enemyCount = Math.floor(baseEnemyCount * Math.pow(window.config.get('game.waveScaling') || 1.2, this.wave - 1));
         
         // Create enemy list
         this.waveEnemies = [];
@@ -382,9 +366,10 @@ class GameEngine {
         }
         
         // Check win condition
-        if (this.waveState === 'combat' && this.enemiesRemaining <= 0 && this.waveEnemies.length === 0) {
+        const currentEnemyCount = this.getEntitiesByTag('enemy').length;
+        if (this.waveState === 'combat' && this.enemiesRemaining <= 0 && this.waveEnemies.length === 0 && currentEnemyCount === 0) {
             this.waveState = 'aftermath';
-            this.waveTimer = window.config.get('game.aftermathTime') / 1000; // Convert to seconds
+            this.waveTimer = window.config.get('game.aftermathTime') / 1000 || 5; // Convert to seconds
             
             // Show scoreboard
             window.eventSystem.emit('wave:complete', this.wave, this.score);
@@ -405,7 +390,7 @@ class GameEngine {
             switch (this.waveState) {
                 case 'preparation':
                     this.waveState = 'combat';
-                    this.waveTimer = window.config.get('game.waveCombatTime') / 1000; // Convert to seconds
+                    this.waveTimer = window.config.get('game.waveCombatTime') / 1000 || 120; // Convert to seconds
                     window.eventSystem.emit('wave:combatStart', this.wave);
                     break;
                     
@@ -430,7 +415,7 @@ class GameEngine {
      */
     updateChaosLevel(deltaTime) {
         // Decay chaos level over time
-        const decayRate = window.config.get('game.chaosDecayRate');
+        const decayRate = window.config.get('game.chaosDecayRate') || 0.1;
         this.chaosLevel = Math.max(0, this.chaosLevel - decayRate * deltaTime);
         
         // Emit chaos level update event
@@ -447,7 +432,7 @@ class GameEngine {
         const spawnInterval = 1 / spawnRate;
         
         // Simple spawn timer (in a real implementation, this would be more sophisticated)
-        this.spawnTimer = (this.spawnTimer || 0) + deltaTime;
+        this.spawnTimer += deltaTime;
         
         if (this.spawnTimer >= spawnInterval && this.waveEnemies.length > 0) {
             this.spawnEnemy();
@@ -606,11 +591,12 @@ class GameEngine {
      * @returns {string} Entity ID
      */
     addEntity(entity) {
-        const id = `entity_${this.nextEntityId++}`;
-        entity.id = id;
+        if (!entity.id) {
+            entity.id = `entity_${this.nextEntityId++}`;
+        }
         entity.gameEngine = this;
-        this.entities.set(id, entity);
-        return id;
+        this.entities.set(entity.id, entity);
+        return entity.id;
     }
     
     /**
@@ -647,6 +633,14 @@ class GameEngine {
             }
         }
         return result;
+    }
+    
+    /**
+     * Get all entities
+     * @returns {Array} Array of all entities
+     */
+    getEntities() {
+        return Array.from(this.entities.values());
     }
     
     /**
@@ -688,8 +682,9 @@ class GameEngine {
         this.gameState = 'gameOver';
         
         // Show game over screen
-        document.getElementById('finalScore').textContent = `Final Score: ${this.score}`;
-        showGameOver();
+        if (window.showGameOver) {
+            window.showGameOver();
+        }
         
         // Emit game over event
         window.eventSystem.emit('game:over', this);
@@ -708,7 +703,7 @@ class GameEngine {
         this.score += enemy.points;
         
         // Check if it's a boss and emit boss defeated event
-        if (enemy.type === 'boss' || enemy.type === 'miniBoss') {
+        if (enemy.enemyType === 'boss' || enemy.enemyType === 'miniBoss') {
             window.eventSystem.emit('boss:defeated', enemy);
         }
         

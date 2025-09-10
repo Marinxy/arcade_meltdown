@@ -92,7 +92,7 @@ class Player extends Entity {
         this.health = classConfig.health;
         this.speed = classConfig.speed;
         this.weaponType = classConfig.weapon;
-        this.maxSpecialCooldown = classConfig.specialCooldown;
+        this.maxSpecialCooldown = (classConfig.specialCooldown || 10) * 1000; // Convert to ms
         
         // Set class-specific special ability properties
         this.initSpecialAbility(playerClass);
@@ -173,6 +173,25 @@ class Player extends Entity {
     }
     
     /**
+     * Get class color
+     * @returns {string} Color for the player class
+     */
+    getClassColor() {
+        switch (this.playerClass) {
+            case 'heavy':
+                return '#8B4513';
+            case 'scout':
+                return '#00FF00';
+            case 'engineer':
+                return '#FFA500';
+            case 'medic':
+                return '#FF0000';
+            default:
+                return '#00FFFF';
+        }
+    }
+    
+    /**
      * Set up event listeners
      */
     setupEventListeners() {
@@ -231,7 +250,7 @@ class Player extends Entity {
         
         // Update special ability cooldown
         if (this.specialCooldown > 0) {
-            this.specialCooldown -= deltaTime * 1000;
+            this.specialCooldown -= deltaTime * 1000; // Convert to ms
             if (this.specialCooldown < 0) {
                 this.specialCooldown = 0;
             }
@@ -296,14 +315,18 @@ class Player extends Entity {
         
         // Handle weapon firing
         if (this.input.mousePressed) {
-            weapon.startFiring();
+            if (weapon.fire) {
+                weapon.fire(transform.x, transform.y, transform.rotation);
+            }
         } else {
-            weapon.stopFiring();
+            // Stop firing logic would go here
         }
         
         // Handle reload
         if (this.input.reload) {
-            weapon.reload();
+            if (weapon.reload) {
+                weapon.reload();
+            }
         }
         
         // Handle special ability
@@ -327,10 +350,10 @@ class Player extends Entity {
             case 'heavy':
                 // Berserk mode: increased damage and speed
                 if (this.usingSpecial) {
-                    weapon.damage = window.config.get(`weapons.${this.weaponType}.damage`) * 1.5;
+                    weapon.damage = (window.config.get(`weapons.${this.weaponType}.damage`) || 10) * 1.5;
                     physics.maxSpeed = this.speed * 1.5;
                 } else {
-                    weapon.damage = window.config.get(`weapons.${this.weaponType}.damage`);
+                    weapon.damage = window.config.get(`weapons.${this.weaponType}.damage`) || 10;
                     physics.maxSpeed = this.speed;
                 }
                 break;
@@ -527,6 +550,52 @@ class Player extends Entity {
         
         // Emit level up event
         window.eventSystem.emit('player:levelUp', this, this.level);
+    }
+    
+    /**
+     * Render the player
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
+     */
+    render(ctx) {
+        const transform = this.getComponent('Transform');
+        const render = this.getComponent('Render');
+        
+        if (!transform || !render || !render.visible) return;
+        
+        ctx.save();
+        ctx.translate(transform.x, transform.y);
+        ctx.rotate(transform.rotation);
+        
+        // Draw player based on class
+        ctx.fillStyle = render.color;
+        
+        switch (this.playerClass) {
+            case 'heavy':
+                ctx.fillRect(-20, -20, 40, 40);
+                break;
+            case 'scout':
+                ctx.beginPath();
+                ctx.moveTo(0, -15);
+                ctx.lineTo(15, 15);
+                ctx.lineTo(-15, 15);
+                ctx.closePath();
+                ctx.fill();
+                break;
+            case 'engineer':
+                ctx.fillRect(-17, -17, 34, 34);
+                break;
+            case 'medic':
+                ctx.fillRect(-17, -17, 34, 34);
+                // Draw medical cross
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(-3, -17, 6, 34);
+                ctx.fillRect(-17, -3, 34, 6);
+                break;
+            default:
+                ctx.fillRect(-15, -15, 30, 30);
+        }
+        
+        ctx.restore();
     }
     
     /**

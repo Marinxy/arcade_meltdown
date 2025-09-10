@@ -219,59 +219,69 @@ class CollisionSystem {
             }
         } else if (entity.hasTag('enemy')) {
             const enemy = entity;
-            switch (enemy.enemyType) {
-                case 'grunt':
-                    width = 20;
-                    height = 20;
-                    break;
-                case 'spitter':
-                    width = 25;
-                    height = 30;
-                    break;
-                case 'bruiser':
-                    width = 35;
-                    height = 35;
-                    break;
-                case 'miniBoss':
-                    width = 50;
-                    height = 50;
-                    break;
-                case 'boss':
-                    width = 80;
-                    height = 80;
-                    break;
+            if (enemy.size) {
+                width = enemy.size;
+                height = enemy.size;
+            } else {
+                switch (enemy.enemyType) {
+                    case 'grunt':
+                        width = 20;
+                        height = 20;
+                        break;
+                    case 'spitter':
+                        width = 25;
+                        height = 30;
+                        break;
+                    case 'bruiser':
+                        width = 35;
+                        height = 35;
+                        break;
+                    case 'miniBoss':
+                        width = 50;
+                        height = 50;
+                        break;
+                    case 'boss':
+                        width = 80;
+                        height = 80;
+                        break;
+                }
             }
         } else if (entity.hasTag('bullet')) {
             const bullet = entity;
-            switch (bullet.type) {
-                case 'bullet':
-                    width = 4;
-                    height = 4;
-                    break;
-                case 'pellet':
-                    width = 3;
-                    height = 3;
-                    break;
-                case 'plasma':
-                    width = 6;
-                    height = 6;
-                    break;
-                case 'rocket':
-                    width = 8;
-                    height = 8;
-                    break;
-                case 'spit':
-                    width = 5;
-                    height = 5;
-                    break;
-                case 'flame':
-                    width = 10;
-                    height = 10;
-                    break;
-                case 'heal':
-                    width = 6;
-                    height = 6;
-                    break;
+            if (bullet.size) {
+                width = bullet.size;
+                height = bullet.size;
+            } else {
+                switch (bullet.type) {
+                    case 'bullet':
+                        width = 4;
+                        height = 4;
+                        break;
+                    case 'pellet':
+                        width = 3;
+                        height = 3;
+                        break;
+                    case 'plasma':
+                        width = 6;
+                        height = 6;
+                        break;
+                    case 'rocket':
+                        width = 8;
+                        height = 8;
+                        break;
+                    case 'spit':
+                        width = 5;
+                        height = 5;
+                        break;
+                    case 'flame':
+                        width = 10;
+                        height = 10;
+                        break;
+                    case 'heal':
+                        width = 6;
+                        height = 6;
+                        break;
+                }
             }
         } else if (entity.hasTag('particle')) {
             const particle = entity;
@@ -349,7 +359,7 @@ class CollisionSystem {
                 const cell2 = cellsWithEntities[j];
                 
                 // Only check adjacent cells
-                if (this.areCellsAdjacent(cell1.cell, cell2.cell)) {
+                if (this.areCellsAdjacent(cell1.key, cell2.key)) {
                     for (const entity1 of cell1.entities) {
                         for (const entity2 of cell2.entities) {
                             this.checkEntityCollision(entity1, entity2);
@@ -372,7 +382,7 @@ class CollisionSystem {
         for (const [key, cell] of this.grid.cells) {
             const entitiesOfType1 = cell.filter(entity => entity.hasTag(type1));
             if (entitiesOfType1.length > 0) {
-                cellsWithType1.push({ cell, entities: entitiesOfType1 });
+                cellsWithType1.push({ key, cell, entities: entitiesOfType1 });
             }
         }
         
@@ -382,7 +392,7 @@ class CollisionSystem {
         for (const [key, cell] of this.grid.cells) {
             const entitiesOfType2 = cell.filter(entity => entity.hasTag(type2));
             if (entitiesOfType2.length > 0) {
-                cellsWithType2.push({ cell, entities: entitiesOfType2 });
+                cellsWithType2.push({ key, cell, entities: entitiesOfType2 });
             }
         }
         
@@ -390,7 +400,7 @@ class CollisionSystem {
         for (const cell1 of cellsWithType1) {
             for (const cell2 of cellsWithType2) {
                 // Only check if cells are the same or adjacent
-                if (cell1.cell === cell2.cell || this.areCellsAdjacent(cell1.cell, cell2.cell)) {
+                if (cell1.key === cell2.key || this.areCellsAdjacent(cell1.key, cell2.key)) {
                     for (const entity1 of cell1.entities) {
                         for (const entity2 of cell2.entities) {
                             this.checkEntityCollision(entity1, entity2);
@@ -476,18 +486,6 @@ class CollisionSystem {
             this.handleEnemyBulletCollision(entity1, entity2);
         } else if (entity1.hasTag('bullet') && entity2.hasTag('enemy')) {
             this.handleEnemyBulletCollision(entity2, entity1);
-        } else if (entity1.hasTag('bullet') && entity2.hasTag('arena')) {
-            this.handleBulletArenaCollision(entity1, entity2);
-        } else if (entity1.hasTag('arena') && entity2.hasTag('bullet')) {
-            this.handleBulletArenaCollision(entity2, entity1);
-        } else if (entity1.hasTag('player') && entity2.hasTag('arena')) {
-            this.handlePlayerArenaCollision(entity1, entity2);
-        } else if (entity1.hasTag('arena') && entity2.hasTag('player')) {
-            this.handlePlayerArenaCollision(entity2, entity1);
-        } else if (entity1.hasTag('enemy') && entity2.hasTag('arena')) {
-            this.handleEnemyArenaCollision(entity1, entity2);
-        } else if (entity1.hasTag('arena') && entity2.hasTag('enemy')) {
-            this.handleEnemyArenaCollision(entity2, entity1);
         }
         
         // Trigger general collision callback
@@ -619,150 +617,17 @@ class CollisionSystem {
     }
     
     /**
-     * Handle bullet-arena collision
-     * @param {Bullet} bullet - Bullet entity
-     * @param {Entity} arena - Arena entity
-     */
-    handleBulletArenaCollision(bullet, arena) {
-        // Handle bullet collision
-        this.handleBulletCollision(bullet);
-        
-        // Trigger callback
-        if (this.callbacks.onBulletArenaCollision) {
-            this.callbacks.onBulletArenaCollision(bullet, arena);
-        }
-    }
-    
-    /**
-     * Handle player-arena collision
-     * @param {Player} player - Player entity
-     * @param {Entity} arena - Arena entity
-     */
-    handlePlayerArenaCollision(player, arena) {
-        // Get player physics component
-        const playerPhysics = player.getComponent('Physics');
-        const playerTransform = player.getComponent('Transform');
-        
-        if (playerPhysics && playerTransform) {
-            // Get player bounds
-            const playerBounds = this.getEntityBounds(player);
-            
-            if (playerBounds) {
-                // Calculate push direction to keep player inside arena
-                let pushX = 0;
-                let pushY = 0;
-                
-                // Check left boundary
-                if (playerBounds.minX < 0) {
-                    pushX = -playerBounds.minX;
-                    playerTransform.x += pushX;
-                }
-                
-                // Check right boundary
-                if (playerBounds.maxX > this.gameEngine.arena.width) {
-                    pushX = this.gameEngine.arena.width - playerBounds.maxX;
-                    playerTransform.x += pushX;
-                }
-                
-                // Check top boundary
-                if (playerBounds.minY < 0) {
-                    pushY = -playerBounds.minY;
-                    playerTransform.y += pushY;
-                }
-                
-                // Check bottom boundary
-                if (playerBounds.maxY > this.gameEngine.arena.height) {
-                    pushY = this.gameEngine.arena.height - playerBounds.maxY;
-                    playerTransform.y += pushY;
-                }
-                
-                // Stop velocity at boundaries
-                if (pushX !== 0) playerPhysics.velocity.x = 0;
-                if (pushY !== 0) playerPhysics.velocity.y = 0;
-            }
-        }
-        
-        // Trigger callback
-        if (this.callbacks.onPlayerArenaCollision) {
-            this.callbacks.onPlayerArenaCollision(player, arena);
-        }
-    }
-    
-    /**
-     * Handle enemy-arena collision
-     * @param {Enemy} enemy - Enemy entity
-     * @param {Entity} arena - Arena entity
-     */
-    handleEnemyArenaCollision(enemy, arena) {
-        // Get enemy physics component
-        const enemyPhysics = enemy.getComponent('Physics');
-        const enemyTransform = enemy.getComponent('Transform');
-        
-        if (enemyPhysics && enemyTransform) {
-            // Get enemy bounds
-            const enemyBounds = this.getEntityBounds(enemy);
-            
-            if (enemyBounds) {
-                // Calculate push direction to keep enemy inside arena
-                let pushX = 0;
-                let pushY = 0;
-                
-                // Check left boundary
-                if (enemyBounds.minX < 0) {
-                    pushX = -enemyBounds.minX;
-                    enemyTransform.x += pushX;
-                }
-                
-                // Check right boundary
-                if (enemyBounds.maxX > this.gameEngine.arena.width) {
-                    pushX = this.gameEngine.arena.width - enemyBounds.maxX;
-                    enemyTransform.x += pushX;
-                }
-                
-                // Check top boundary
-                if (enemyBounds.minY < 0) {
-                    pushY = -enemyBounds.minY;
-                    enemyTransform.y += pushY;
-                }
-                
-                // Check bottom boundary
-                if (enemyBounds.maxY > this.gameEngine.arena.height) {
-                    pushY = this.gameEngine.arena.height - enemyBounds.maxY;
-                    enemyTransform.y += pushY;
-                }
-                
-                // Stop velocity at boundaries
-                if (pushX !== 0) enemyPhysics.velocity.x = 0;
-                if (pushY !== 0) enemyPhysics.velocity.y = 0;
-            }
-        }
-        
-        // Trigger callback
-        if (this.callbacks.onEnemyArenaCollision) {
-            this.callbacks.onEnemyArenaCollision(enemy, arena);
-        }
-    }
-    
-    /**
      * Handle bullet collision
      * @param {Bullet} bullet - Bullet entity
      */
     handleBulletCollision(bullet) {
-        // Get bullet physics component
-        const bulletPhysics = bullet.getComponent('Physics');
-        
-        // Stop bullet
-        if (bulletPhysics) {
-            bulletPhysics.stop();
-        }
-        
         // Call bullet's collision method
         if (typeof bullet.onCollision === 'function') {
-            bullet.onCollision(bullet);
+            bullet.onCollision();
         }
         
         // Destroy bullet if it has no penetration left
-        if (bullet.penetration < 0) {
+        if (bullet.penetration <= 0) {
             bullet.destroy();
         }
     }
@@ -1097,6 +962,4 @@ class CollisionSystem {
 }
 
 // Export for use in modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CollisionSystem;
-}
+export default CollisionSystem;

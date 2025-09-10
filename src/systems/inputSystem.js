@@ -450,17 +450,14 @@ class InputSystem {
      */
     destroy() {
         // Remove event listeners
-        window.removeEventListener('keydown', this.handleKeyDown);
-        window.removeEventListener('keyup', this.handleKeyUp);
-        this.canvas.removeEventListener('mousedown', this.handleMouseDown);
-        this.canvas.removeEventListener('mouseup', this.handleMouseUp);
-        this.canvas.removeEventListener('mousemove', this.handleMouseMove);
-        this.canvas.removeEventListener('wheel', this.handleMouseWheel);
-        this.canvas.removeEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
-        window.removeEventListener('blur', this.handleWindowBlur);
-        window.removeEventListener('focus', this.handleWindowFocus);
+        window.removeEventListener('keydown', this.handleKeyDown.bind(this));
+        window.removeEventListener('keyup', this.handleKeyUp.bind(this));
+        this.canvas.removeEventListener('mousedown', this.handleMouseDown.bind(this));
+        this.canvas.removeEventListener('mouseup', this.handleMouseUp.bind(this));
+        this.canvas.removeEventListener('mousemove', this.handleMouseMove.bind(this));
+        this.canvas.removeEventListener('wheel', this.handleMouseWheel.bind(this));
+        window.removeEventListener('blur', this.handleWindowBlur.bind(this));
+        window.removeEventListener('focus', this.handleWindowFocus.bind(this));
         
         // Clear input state
         this.keys = {};

@@ -143,7 +143,8 @@ class Weapon {
                 const spreadAngle = (Math.random() - 0.5) * this.spread * Math.PI / 180;
                 const pelletAngle = angle + spreadAngle;
                 
-                bullets.push(this.createBullet(x, y, pelletAngle, finalDamage));
+                const bullet = this.createBullet(x, y, pelletAngle, finalDamage);
+                bullets.push(bullet);
             }
         } else if (this.coneAngle > 0) {
             // Flamethrower - create cone of bullets
@@ -154,7 +155,8 @@ class Weapon {
                 const spreadAngle = (Math.random() - 0.5) * coneRadians;
                 const bulletAngle = angle + spreadAngle;
                 
-                bullets.push(this.createBullet(x, y, bulletAngle, finalDamage));
+                const bullet = this.createBullet(x, y, bulletAngle, finalDamage);
+                bullets.push(bullet);
             }
         } else {
             // Single bullet
@@ -162,8 +164,12 @@ class Weapon {
             const spreadAngle = (Math.random() - 0.5) * this.spread * Math.PI / 180;
             const finalAngle = angle + spreadAngle;
             
-            bullets.push(this.createBullet(x, y, finalAngle, finalDamage));
+            const bullet = this.createBullet(x, y, finalAngle, finalDamage);
+            bullets.push(bullet);
         }
+        
+        // Create actual bullet entities
+        this.createBulletEntities(bullets);
         
         // Trigger fire callback
         if (this.onFire) {
@@ -195,6 +201,34 @@ class Weapon {
             splashRadius: this.splashRadius,
             owner: null // Will be set by the entity
         };
+    }
+    
+    /**
+     * Create bullet entities from bullet data
+     * @param {Array} bullets - Array of bullet data
+     */
+    createBulletEntities(bullets) {
+        // Import Bullet class dynamically to avoid circular dependency
+        import('../entities/bullet.js').then(({ default: Bullet }) => {
+            for (const bulletData of bullets) {
+                const bullet = new Bullet(
+                    bulletData.x,
+                    bulletData.y,
+                    bulletData.angle,
+                    bulletData.speed,
+                    bulletData.damage,
+                    bulletData.type,
+                    this.entity || null
+                );
+                
+                // Add bullet to game engine if available
+                if (this.entity && this.entity.gameEngine) {
+                    this.entity.gameEngine.addEntity(bullet);
+                }
+            }
+        }).catch(error => {
+            console.error('Failed to create bullet entities:', error);
+        });
     }
     
     /**
