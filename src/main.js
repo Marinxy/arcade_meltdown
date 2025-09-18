@@ -5,7 +5,7 @@
 
 // Import required modules
 import GameEngine from './core/gameEngine.js';
-import Config from './config.js';
+import Config from './core/config.js';
 import EventSystem from './core/eventSystem.js';
 import UI from './ui/ui.js';
 import Player from './entities/player.js';
