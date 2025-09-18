@@ -569,10 +569,17 @@ class ExpansionSoundtrackSystem {
             return;
         }
         
+        // Check if audio source is valid before attempting to play
+        if (!track.audio.src || track.audio.readyState === 0) {
+            console.warn(`Track ${track.id} has no valid audio source`);
+            return;
+        }
+        
         // Play track
         track.audio.currentTime = 0;
         track.audio.play().catch(error => {
-            console.error(`Failed to play track ${track.id}:`, error);
+            console.warn(`Failed to play track ${track.id}:`, error.message);
+            // Don't throw the error, just log it and continue
         });
         
         // Store as current track
